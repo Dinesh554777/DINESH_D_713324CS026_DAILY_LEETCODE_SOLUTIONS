@@ -1,23 +1,13 @@
 class Solution:
     def shortestBeautifulSubstring(self, s: str, k: int) -> str:
-        if s.count('1')<k: return ""
-        n=len(s)
-        minLen, cnt1, Len=n, 0, 0
-        xMin, win=1<<n, 0
-        l=0
-        for r, c in enumerate(s):
-            is1=c=='1'
-            win=(win<<1)|is1
-            cnt1+=is1
-            Len+=1
-            while cnt1>k or (cnt1==k and s[l]=='0'):
-                win&=(1<<(Len-1))-1
-                Len-=1
-                cnt1-=s[l]=='1'
-                l+=1
-            if cnt1==k:
-                if Len<minLen:
-                    minLen, xMin=Len, win
-                elif Len==minLen and win<xMin:
-                    xMin=win
-        return bin(xMin)[2:]
+
+        ones = [i for i, digit in enumerate(s) if digit == '1']     # <-- 1.
+        
+        if len(ones) < k: return ''
+
+        cands = list(zip(ones,ones[k-1:]))                          
+        minLen = min(r-l for l, r in cands)                         # <-- 2.
+
+        cands = list(filter(lambda x: x[1]-x[0] == minLen, cands))  # <-- 3.
+
+        return min([s[l:r+1] for l,r in cands])                     # <-- 4.
