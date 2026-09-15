@@ -1,27 +1,11 @@
 class Solution:
-    def maxPalindromes(self, s: str, k: int) -> int:
-        n = len(s)
-        count = 0
-        last_end = 0
-
-        def is_palindrome(left, right):
-            while left < right:
-                if s[left] != s[right]:
-                    return False
-                left += 1
-                right -= 1
-            return True
-
-        for right in range(k - 1, n):
-            left = right - k + 1
-
-            add = (
-                (left >= last_end and is_palindrome(left, right)) or
-                (left > last_end and is_palindrome(left - 1, right))
-            )
-
-            if add:
-                count += 1
-                last_end = right + 1
-
-        return count
+    def maxPalindromes(self, S: str, k: int) -> int:
+        n, i, res = len(S), 0, 0
+        while i <= n - k:
+            for l in [k, k + 1]:
+                if i + l <= n and S[i:i+l] == S[i:i+l][::-1]:
+                    res += 1
+                    i += (l - 1)
+                    break
+            i += 1
+        return res
